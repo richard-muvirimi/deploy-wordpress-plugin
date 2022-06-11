@@ -1,0 +1,77 @@
+name: 'Deploy WordPress Plugin'
+description: 'Deploy WordPress Plugin to SVN repository'
+author: 'richard-muvirimi'
+branding:
+  icon: 'upload-cloud'
+  color: 'blue'
+inputs:
+  svn-username:
+    description: 'The repository username.'
+    required: true
+  svn-password:
+    description: 'The repository password.'
+    required: true
+  plugin-repository:
+    description: 'The svn repository name of the plugin. Can be a full url to use a custom repository. Defaults to git repository name.'
+    default: ${{ GITHUB_REPOSITORY }}
+    type: string
+  plugin-zip:
+    description: 'Zip file name to generate, "slug" to use plugin slug, leave empty to disable.'
+    default: ''
+    type: string
+  plugin-zip-folder:
+    description: 'Folder name to use at root of zip, "slug" to use plugin slug, leave empty to disable.'
+    default: ''
+    type: string
+  plugin-version:
+    description: 'Tag for releasing to WordPress, text to use a custom tag, "tag" to read from release tags, "readme" (default) to obtain from readme.'
+    default: 'readme'
+    type: string
+  commit-message:
+    description: 'Commit message for releasing to WordPress, text to use a custom message, "git" (default) to use the last git commit message.'
+    default: 'git'
+    type: string
+  working-directory:
+    description: 'Working directory, defaults to $GITHUB_WORKSPACE. All files in working directory will be committed, except "plugin-assets" directory.'
+    default: ${{ $GITHUB_WORKSPACE }}
+    type: string
+  plugin-assets:
+    description: 'Directory containing plugin assets, defaults to ".wordpress-org".'
+    default: '.wordpress-org'
+    type: string
+outputs:
+  plugin-zip:
+    description: 'Path to plugin zip file.'
+    value: ${{ steps.deploy.outputs.plugin-zip }}
+    type: string
+  plugin-version:
+    description: 'The version tag used to commit to WordPress.'
+    value: ${{ steps.deploy.outputs.plugin-version }}
+    type: string
+  commit-message:
+    description: 'The message used to commit to WordPress.'
+    value: ${{ steps.deploy.outputs.plugin-version }}
+    type: string
+runs:
+  using: 'composite'
+  steps:
+    - id: deploy
+      env:
+        INPUT_PLUGIN_REPOSTITORY: ${{ inputs.plugin-repository }}
+        INPUT_PLUGIN_ZIP: ${{ inputs.plugin-zip }}
+        INPUT_PLUGIN_ZIP_FOLDER: ${{ inputs.plugin-zip-folder }}
+        INPUT_PLUGIN_VERSION: ${{ inputs.plugin-version }}
+        INPUT_COMMIT_MESSAGE: ${{ inputs.commit-message }}
+        INPUT_WORKING_DIRECTORY: ${{ inputs.working-directory }}
+        INPUT_PLUGIN_ASSETS: ${{ inputs.plugin-assets }}
+      run: ${{ github.action_path }}/deploy.sh
+      shell: bash
+    - id: zip
+      if: ${{ env.INPUT_PLUGIN_ZIP != false }}
+      env:
+        INPUT_PLUGIN_SLUG: ${{ inputs.plugin-slug }}
+        INPUT_PLUGIN_ZIP: ${{ inputs.plugin-zip }}
+        INPUT_PLUGIN_ZIP_FOLDER: ${{ inputs.plugin-zip-folder }}
+        INPUT_WORKING_DIRECTORY: ${{ inputs.working-directory }}
+      run: ${{ github.action_path }}/plugin-zip.sh
+      shell: bash
