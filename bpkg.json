@@ -1,0 +1,11 @@
+{
+  "name": "deploy-wordpress-plugin",
+  "version": "0.1.0",
+  "description": "Deploy WordPress Plugin to SVN repository",
+  "install": "install -b deploy-wordpress-plugin.sh ${PREFIX:-/usr/local}/bin/deploy-wordpress-plugin",
+  "scripts": [
+    "deploy.sh",
+    "deploy-zip.sh",
+    "src/*"
+  ]
+}

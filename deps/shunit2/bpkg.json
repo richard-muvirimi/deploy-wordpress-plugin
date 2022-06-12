@@ -1,0 +1,9 @@
+{
+  "name": "shunit2",
+  "version": "2.1.8",
+  "description": "shUnit2 is a xUnit based unit test framework for Bourne based shell scripts.",
+  "install": "install -b shunit2 ${PREFIX:-/usr/local}/bin/shunit2",
+  "scripts": [
+    "shunit2"
+  ]
+}
