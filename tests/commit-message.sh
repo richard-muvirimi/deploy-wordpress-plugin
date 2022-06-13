@@ -15,7 +15,9 @@ testGitCommitMessage(){
 #test using custom commit message
 testCustomCommitMessage(){
 
-    export INPUT_PLUGIN_VERSION=`pluginVersion "1.0.0"`
+    INPUT_PLUGIN_VERSION=`pluginVersion "1.0.0"`
+    
+    export INPUT_PLUGIN_VERSION
 
     INPUT_COMMIT_MESSAGE=`commitMessage "Github deploy :VERSION"`
 
