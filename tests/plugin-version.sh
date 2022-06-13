@@ -5,7 +5,7 @@
 #Test readme version
 testReadMeVersion(){
 
-    WORKING_DIRECTORY_TEMP=$(mktemp -d -p "$GITHUB_WORKSPACE")
+    WORKING_DIRECTORY_TEMP="$(mktemp -d -p "$GITHUB_WORKSPACE")"
 
     if [ -d "$WORKING_DIRECTORY_TEMP" ]; then
         #test
@@ -19,12 +19,12 @@ EOF
 
         export INPUT_WORKING_DIRECTORY
 
-        INPUT_PLUGIN_VERSION=$(pluginVersion "readme")
+        INPUT_PLUGIN_VERSION="$(pluginVersion "readme")"
 
         assertEquals "1.0.0" "$INPUT_PLUGIN_VERSION"
     fi
 
-    trap $(rm -rf "$WORKING_DIRECTORY_TEMP") EXIT
+    trap "$(rm -rf "$WORKING_DIRECTORY_TEMP")" EXIT
 
 }
 

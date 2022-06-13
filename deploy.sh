@@ -40,7 +40,7 @@ svn checkout --depth immediates "$INPUT_PLUGIN_REPOSITORY" "$SVN_DIRECTORY"
 
 #switch to svn working directory
 echo "➤ Switching to svn working directory"
-cd "$SVN_DIRECTORY"
+cd "$SVN_DIRECTORY" || exit
 
 #Prevent clear assets directory
 svn update --set-depth infinity assets
@@ -103,13 +103,13 @@ svn commit -m "$INPUT_COMMIT_MESSAGE" --no-auth-cache --non-interactive  --usern
 
 echo "✓ Plugin deployed!"
 
-#Normalize
-echo "➤ Switching to working directory"
-cd "$GITHUB_WORKSPACE"
-
 echo "::set-output name=plugin-version::$INPUT_PLUGIN_VERSION"
 echo "::set-output name=commit-message::$INPUT_COMMIT_MESSAGE"
 
 echo "➤ Cleaning up working directory"
 rm -rf "$SVN_DIRECTORY"
+
+#Normalize
+echo "➤ Switching to working directory"
+cd "$GITHUB_WORKSPACE" || exit
 
