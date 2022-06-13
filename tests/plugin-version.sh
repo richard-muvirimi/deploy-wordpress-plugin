@@ -24,7 +24,7 @@ EOF
         assertEquals "1.0.0" "$INPUT_PLUGIN_VERSION"
     fi
 
-    trap "$(rm -rf "$WORKING_DIRECTORY_TEMP")" EXIT
+    trap '$(rm -rf "$WORKING_DIRECTORY_TEMP")' EXIT
 
 }
 
