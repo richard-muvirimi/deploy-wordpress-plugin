@@ -5,7 +5,7 @@
 #Test readme version
 testReadMeVersion(){
 
-    WORKING_DIRECTORY_TEMP=`mktemp -d -p "$GITHUB_WORKSPACE"`
+    WORKING_DIRECTORY_TEMP=$(mktemp -d -p "$GITHUB_WORKSPACE")
 
     if [ -d "$WORKING_DIRECTORY_TEMP" ]; then
         #test
@@ -15,22 +15,24 @@ Stable tag: 1.0.0
 Stable tag: 1.0.1
 EOF
 
-        INPUT_WORKING_DIRECTORY=$WORKING_DIRECTORY_TEMP
+        INPUT_WORKING_DIRECTORY="$WORKING_DIRECTORY_TEMP"
 
-        INPUT_PLUGIN_VERSION=`pluginVersion "readme"`
+        export INPUT_WORKING_DIRECTORY
 
-        assertEquals "1.0.0" $INPUT_PLUGIN_VERSION
+        INPUT_PLUGIN_VERSION=$(pluginVersion "readme")
+
+        assertEquals "1.0.0" "$INPUT_PLUGIN_VERSION"
     fi
 
-    trap `rm -rf $WORKING_DIRECTORY_TEMP` EXIT
+    trap $(rm -rf "$WORKING_DIRECTORY_TEMP") EXIT
 
 }
 
 #Test readme version
 testCustomVersion(){
 
-    INPUT_PLUGIN_VERSION=`pluginVersion "1.0.0"`
+    INPUT_PLUGIN_VERSION=$(pluginVersion "1.0.0")
 
-    assertEquals "1.0.0" $INPUT_PLUGIN_VERSION
+    assertEquals "1.0.0" "$INPUT_PLUGIN_VERSION"
 
 }

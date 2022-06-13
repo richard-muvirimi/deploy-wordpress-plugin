@@ -5,10 +5,13 @@
 #test slug zip name
 testSlugZipName(){
 
-    export PLUGIN_SLUG="test-slug"
-    export SVN_DIRECTORY="$GITHUB_WORKSPACE"
+    PLUGIN_SLUG="test-slug"
+    SVN_DIRECTORY="$GITHUB_WORKSPACE"
 
-    INPUT_PLUGIN_ZIP=`pluginZipName "slug"`
+    export PLUGIN_SLUG
+    export SVN_DIRECTORY
+
+    INPUT_PLUGIN_ZIP=$(pluginZipName "slug")
 
     assertEquals "$SVN_DIRECTORY/test-slug.zip" "$INPUT_PLUGIN_ZIP"
 
@@ -17,10 +20,13 @@ testSlugZipName(){
 #test custom zip name
 testCustomSlugZipName(){
 
-    export PLUGIN_SLUG="test-name"
-    export SVN_DIRECTORY="$GITHUB_WORKSPACE"
+    PLUGIN_SLUG="test-name"
+    SVN_DIRECTORY="$GITHUB_WORKSPACE"
 
-    INPUT_PLUGIN_ZIP=`pluginZipName "$PLUGIN_SLUG"`
+    export PLUGIN_SLUG
+    export SVN_DIRECTORY
+
+    INPUT_PLUGIN_ZIP=$(pluginZipName "$PLUGIN_SLUG")
 
     assertEquals "$SVN_DIRECTORY/$PLUGIN_SLUG.zip" "$INPUT_PLUGIN_ZIP"
 
@@ -29,10 +35,13 @@ testCustomSlugZipName(){
 #test slug zip folder
 testSlugZipFolder(){
     
-    export PLUGIN_SLUG="test-slug"
-    export SVN_DIRECTORY="$GITHUB_WORKSPACE"
+    PLUGIN_SLUG="test-slug"
+    SVN_DIRECTORY="$GITHUB_WORKSPACE"
 
-    INPUT_PLUGIN_ZIP=`pluginZipFolder "slug"`
+    export PLUGIN_SLUG
+    export SVN_DIRECTORY
+
+    INPUT_PLUGIN_ZIP=$(pluginZipFolder "slug")
 
     assertEquals "$SVN_DIRECTORY/test-slug" "$INPUT_PLUGIN_ZIP"
 
@@ -41,10 +50,13 @@ testSlugZipFolder(){
 #test custom zip folder
 testCustomZipFolder(){
         
-    export PLUGIN_SLUG="test-name"
-    export SVN_DIRECTORY="$GITHUB_WORKSPACE"
+    PLUGIN_SLUG="test-name"
+    SVN_DIRECTORY="$GITHUB_WORKSPACE"
 
-    INPUT_PLUGIN_ZIP_FOLDER=`pluginZipFolder "$PLUGIN_SLUG"`
+    export PLUGIN_SLUG
+    export SVN_DIRECTORY
+
+    INPUT_PLUGIN_ZIP_FOLDER=$(pluginZipFolder "$PLUGIN_SLUG")
 
     assertEquals "$SVN_DIRECTORY/$PLUGIN_SLUG" "$INPUT_PLUGIN_ZIP_FOLDER"
 

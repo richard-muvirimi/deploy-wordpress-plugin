@@ -6,18 +6,20 @@
 #test using last git commit message
 testGitCommitMessage(){
 
-    INPUT_COMMIT_MESSAGE=`commitMessage "git"`
+    INPUT_COMMIT_MESSAGE=$(commitMessage "git")
 
-    assertEquals "`git -C "$GITHUB_WORKSPACE" log -1 --format=%s`" "$INPUT_COMMIT_MESSAGE"
+    assertEquals "$(git -C "$GITHUB_WORKSPACE" log -1 --format=%s)" "$INPUT_COMMIT_MESSAGE"
 
 }
 
 #test using custom commit message
 testCustomCommitMessage(){
 
-    export INPUT_PLUGIN_VERSION=`pluginVersion "1.0.0"`
+    INPUT_PLUGIN_VERSION=$(pluginVersion "1.0.0")
 
-    INPUT_COMMIT_MESSAGE=`commitMessage "Github deploy :VERSION"`
+    export INPUT_PLUGIN_VERSION
+
+    INPUT_COMMIT_MESSAGE=$(commitMessage "Github deploy :VERSION")
 
     assertEquals "Github deploy 1.0.0" "$INPUT_COMMIT_MESSAGE"
 

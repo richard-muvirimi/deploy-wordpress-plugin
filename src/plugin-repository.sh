@@ -2,9 +2,9 @@
 
 pluginRepository(){
 
-    INPUT_PLUGIN_REPOSITORY=$1
+    INPUT_PLUGIN_REPOSITORY="$1"
 
-    case $INPUT_PLUGIN_REPOSITORY in
+    case "$INPUT_PLUGIN_REPOSITORY" in
         http*)
             #Use as is
             ;;

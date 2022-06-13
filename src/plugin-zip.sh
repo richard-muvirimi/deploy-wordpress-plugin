@@ -3,15 +3,15 @@
 #the zip name to generate
 pluginZipName(){
 
-    INPUT_PLUGIN_ZIP=$1
+    INPUT_PLUGIN_ZIP="$1"
 
-    case $INPUT_PLUGIN_ZIP in
+    case "$INPUT_PLUGIN_ZIP" in
         slug | "")
-            INPUT_PLUGIN_ZIP=`readlink -fq "$SVN_DIRECTORY/$PLUGIN_SLUG"`
+            INPUT_PLUGIN_ZIP=$(readlink -fq "$SVN_DIRECTORY/$PLUGIN_SLUG")
             ;;
         *)
             #Use provided
-            INPUT_PLUGIN_ZIP=`readlink -fq "$SVN_DIRECTORY/$INPUT_PLUGIN_ZIP"`
+            INPUT_PLUGIN_ZIP=$(readlink -fq "$SVN_DIRECTORY/$INPUT_PLUGIN_ZIP")
             ;;
     esac
 
@@ -22,18 +22,18 @@ pluginZipName(){
 #the zip folder to embed inside
 pluginZipFolder(){
 
-    INPUT_PLUGIN_ZIP_FOLDER=$1
+    INPUT_PLUGIN_ZIP_FOLDER="$1"
 
-    case $INPUT_PLUGIN_ZIP_FOLDER in
+    case "$INPUT_PLUGIN_ZIP_FOLDER" in
         slug)
-            SVN_DIRECTORY=`readlink -fq "$SVN_DIRECTORY/$PLUGIN_SLUG"`
+            SVN_DIRECTORY=$(readlink -fq "$SVN_DIRECTORY/$PLUGIN_SLUG")
             ;;
         false)
             #leave as is
             ;;
         *)
             #Use provided
-            SVN_DIRECTORY=`readlink -fq "$SVN_DIRECTORY/$INPUT_PLUGIN_ZIP_FOLDER"`
+            SVN_DIRECTORY=$(readlink -fq "$SVN_DIRECTORY/$INPUT_PLUGIN_ZIP_FOLDER")
             ;;
     esac
 

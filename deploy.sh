@@ -20,17 +20,17 @@ DIRECTORY_SRC="$GITHUB_ACTION_PATH/src"
 . "$DIRECTORY_SRC/plugin-slug.sh" 
 
 #Infer raw plugin slug
-PLUGIN_SLUG=`pluginSlug "$INPUT_PLUGIN_REPOSITORY"`
+PLUGIN_SLUG=$(pluginSlug "$INPUT_PLUGIN_REPOSITORY")
 
 #Normalize environment
-INPUT_PLUGIN_REPOSITORY=`pluginRepository "$INPUT_PLUGIN_REPOSITORY"`
-INPUT_PLUGIN_VERSION=`pluginVersion "$INPUT_PLUGIN_VERSION"`
-INPUT_COMMIT_MESSAGE=`commitMessage "$INPUT_COMMIT_MESSAGE"`
-INPUT_WORKING_DIRECTORY=`workingDirectory "$INPUT_WORKING_DIRECTORY"`
-INPUT_ASSETS_DIRECTORY=`assetsDirectory "$INPUT_ASSETS_DIRECTORY"`
+INPUT_PLUGIN_REPOSITORY=$(pluginRepository "$INPUT_PLUGIN_REPOSITORY")
+INPUT_PLUGIN_VERSION=$(pluginVersion "$INPUT_PLUGIN_VERSION")
+INPUT_COMMIT_MESSAGE=$(commitMessage "$INPUT_COMMIT_MESSAGE")
+INPUT_WORKING_DIRECTORY=$(workingDirectory "$INPUT_WORKING_DIRECTORY")
+INPUT_ASSETS_DIRECTORY=$(assetsDirectory "$INPUT_ASSETS_DIRECTORY")
 
 #svn working directory
-SVN_DIRECTORY=`mktemp -d -p "$GITHUB_WORKSPACE"`
+SVN_DIRECTORY=$(mktemp -d -p "$GITHUB_WORKSPACE")
 
 #Check out svn repository
 echo "➤ Checking out $INPUT_PLUGIN_REPOSITORY"
@@ -68,16 +68,16 @@ if [ -z "$INPUT_ASSETS_DIRECTORY" ]; then
 
     # Fix asset mime type
     # https://developer.wordpress.org/plugins/wordpress-org/plugin-assets/#issues
-    if [ -n `find "assets" -maxdepth 1 -name "*.png" -print -quit`]; then
+    if [ -n $(find "assets" -maxdepth 1 -name "*.png" -print -quit) ]; then
         svn propset svn:mime-type "image/png" "assets/*.png" || true
     fi
-    if [ -n `find "assets" -maxdepth 1 -name "*.jpg" -print -quit`]; then
+    if [ -n $(find "assets" -maxdepth 1 -name "*.jpg" -print -quit) ]; then
         svn propset svn:mime-type "image/jpeg" "assets/*.jpg" || true
     fi
-    if [ -n `find "assets" -maxdepth 1 -name "*.gif" -print -quit`]; then
+    if [ -n $(find "assets" -maxdepth 1 -name "*.gif" -print -quit) ]; then
         svn propset svn:mime-type "image/gif" "assets/*.gif" || true
     fi
-    if [ -n `find "assets" -maxdepth 1 -name "*.svg" -print -quit`]; then
+    if [ -n $(find "assets" -maxdepth 1 -name "*.svg" -print -quit) ]; then
         svn propset svn:mime-type "image/svg+xml" "assets/*.svg" || true
     fi
 fi

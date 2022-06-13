@@ -2,14 +2,14 @@
 
 commitMessage(){
 
-    INPUT_COMMIT_MESSAGE=$1
+    INPUT_COMMIT_MESSAGE="$1"
 
-    case $INPUT_COMMIT_MESSAGE in
+    case "$INPUT_COMMIT_MESSAGE" in
         "git")
-            INPUT_COMMIT_MESSAGE=`git -C "$GITHUB_WORKSPACE" log -1 --format=%s`
+            INPUT_COMMIT_MESSAGE=$(git -C "$GITHUB_WORKSPACE" log -1 --format=%s)
             ;;
         *)
-            INPUT_COMMIT_MESSAGE=`echo "$INPUT_COMMIT_MESSAGE" | sed s/":VERSION"/"$INPUT_PLUGIN_VERSION/"`
+            INPUT_COMMIT_MESSAGE=$(echo "$INPUT_COMMIT_MESSAGE" | sed s/":VERSION"/"$INPUT_PLUGIN_VERSION/")
             ;;
     esac
 

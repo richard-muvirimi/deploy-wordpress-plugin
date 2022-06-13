@@ -5,7 +5,7 @@
 #test plugin slug
 testPluginSlug(){
 
-    PLUGIN_SLUG=`pluginSlug "test-slug"`
+    PLUGIN_SLUG=$(pluginSlug "test-slug")
 
     assertEquals "test-slug" "$PLUGIN_SLUG"
 
@@ -14,9 +14,11 @@ testPluginSlug(){
 #test empty plugin slug
 testPluginSlugEmpty(){
 
-    export GITHUB_REPOSITORY="richard-muvirimi/test-slug"
+    GITHUB_REPOSITORY="richard-muvirimi/test-slug"
 
-    PLUGIN_SLUG=`pluginSlug ""`
+    export GITHUB_REPOSITORY
+
+    PLUGIN_SLUG=$(pluginSlug "")
 
     assertEquals "test-slug" "$PLUGIN_SLUG"
 
@@ -25,7 +27,7 @@ testPluginSlugEmpty(){
 #test plugin slug from url
 testPluginSlugURL(){
 
-    PLUGIN_SLUG=`pluginSlug "https://plugins.svn.wordpress.org/test-slug"`
+    PLUGIN_SLUG=$(pluginSlug "https://plugins.svn.wordpress.org/test-slug")
 
     assertEquals "test-slug" "$PLUGIN_SLUG"
 

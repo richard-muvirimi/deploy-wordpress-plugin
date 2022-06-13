@@ -5,7 +5,7 @@
 #test plugin slug
 testRepositorySlug(){
 
-    INPUT_PLUGIN_REPOSITORY=`pluginRepository "test-slug"`
+    INPUT_PLUGIN_REPOSITORY=$(pluginRepository "test-slug")
 
     assertEquals "https://plugins.svn.wordpress.org/test-slug" "$INPUT_PLUGIN_REPOSITORY"
 
@@ -14,7 +14,7 @@ testRepositorySlug(){
 #test plugin url
 testRepositoryURL(){
 
-    INPUT_PLUGIN_REPOSITORY=`pluginRepository "https://plugins.svn.wordpress.org/test-slug"`
+    INPUT_PLUGIN_REPOSITORY=$(pluginRepository "https://plugins.svn.wordpress.org/test-slug")
 
     assertEquals "https://plugins.svn.wordpress.org/test-slug" "$INPUT_PLUGIN_REPOSITORY"
 
