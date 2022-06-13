@@ -6,7 +6,7 @@ workingDirectory(){
     INPUT_WORKING_DIRECTORY="$1"
 
     #trim path
-    WORKING_DIRECTORY=$(readlink -fq "$INPUT_WORKING_DIRECTORY")
+    WORKING_DIRECTORY="$(readlink -fq "$INPUT_WORKING_DIRECTORY")"
 
     case "$INPUT_WORKING_DIRECTORY" in 
         /*)
@@ -15,7 +15,7 @@ workingDirectory(){
             ;;
         *)
             #Prepend workspace path
-            INPUT_WORKING_DIRECTORY=$(readlink -fq "$GITHUB_WORKSPACE/$INPUT_WORKING_DIRECTORY")/
+            INPUT_WORKING_DIRECTORY="$(readlink -fq "$GITHUB_WORKSPACE/$INPUT_WORKING_DIRECTORY")/"
             ;;
     esac
 
@@ -27,5 +27,5 @@ assetsDirectory(){
 
     INPUT_ASSETS_DIRECTORY="$1"
 
-    echo $(workingDirectory "$INPUT_ASSETS_DIRECTORY")
+    echo "$(workingDirectory "$INPUT_ASSETS_DIRECTORY")"
 }
