@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-#Infer raw plugin slug
-PLUGIN_SLUG=`pluginSlug "$INPUT_PLUGIN_REPOSITORY"`
-
 DIRECTORY_SRC="$GITHUB_ACTION_PATH/src"
 
 . "$DIRECTORY_SRC/working-directory.sh" 
 . "$DIRECTORY_SRC/plugin-zip.sh" 
+
+#Infer raw plugin slug
+PLUGIN_SLUG=`pluginSlug "$INPUT_PLUGIN_REPOSITORY"`
 
 INPUT_WORKING_DIRECTORY=`workingDirectory "$INPUT_WORKING_DIRECTORY"`
 INPUT_ASSETS_DIRECTORY=`assetsDirectory "$INPUT_ASSETS_DIRECTORY"`
