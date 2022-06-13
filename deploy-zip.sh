@@ -18,7 +18,7 @@ SVN_DIRECTORY=`mktemp -d -p "$HOME"`
 export SVN_DIRECTORY=`pluginZipFolder "$INPUT_PLUGIN_ZIP_FOLDER"`
 
 #create directories
-mkdir -p $SVN_DIRECTORY
+mkdir -p "$SVN_DIRECTORY"
 
 INPUT_PLUGIN_ZIP=`pluginZipName "$INPUT_PLUGIN_ZIP"`
 
