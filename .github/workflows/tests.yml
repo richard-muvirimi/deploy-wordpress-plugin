@@ -23,6 +23,7 @@ jobs:
         uses: ludeeus/action-shellcheck@master
         with:
           ignore_paths: deps
+          check_together: 'yes'
 
       - name: Run a test script
         run: sh tests.sh
