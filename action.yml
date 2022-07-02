@@ -6,21 +6,21 @@ branding:
   color: 'blue'
 inputs:
   svn-username:
-    description: 'The repository username.'
+    description: 'SVN repository username.'
     required: true
   svn-password:
-    description: 'The repository password.'
+    description: 'SVN repository password.'
     required: true
   plugin-repository:
     description: 'The svn repository name (slug) of the plugin on WordPress.org. Can be a full url to use a custom repository. Defaults to git repository name if empty. Default empty.'
     default: ""
     type: string
   plugin-zip:
-    description: 'Zip file name to generate, any custom text to name differently, "slug" (default) to use plugin slug.'
+    description: 'Zip file name to generate, any custom text to name differently, "slug" (default) to use plugin slug. set empty to disable. ".zip" will be automatically appended.'
     default: 'slug'
     type: string
   plugin-zip-folder:
-    description: 'Folder name to use at root of zip, "slug" to use plugin slug, leave empty to disable.'
+    description: 'Folder name to use at root of zip, "slug" to use plugin slug, set empty to disable.'
     default: ''
     type: string
   plugin-version:
@@ -29,11 +29,11 @@ inputs:
     type: string
     required: true
   commit-message:
-    description: 'Commit message for releasing to WordPress, text to use a custom message, "git" (default) to use the last git commit message.'
+    description: 'Commit message for releasing to WordPress, any custom text to use a custom message, "git" (default) to use the last git commit message. Substitutes ":VERSION" with provided/inferred plugin version.'
     default: 'git'
     type: string
   working-directory:
-    description: 'Working directory, defaults to $GITHUB_WORKSPACE if empty. All files in working directory will be committed, except "plugin-assets" directory. Default empty.'
+    description: 'Working directory, defaults to $GITHUB_WORKSPACE if empty. All files in working directory will be committed, except those in "assets-directory" directory. Default empty.'
     default: ""
     type: string
   assets-directory:
@@ -42,13 +42,13 @@ inputs:
     type: string
 outputs:
   plugin-zip:
-    description: 'Path to plugin zip file.'
+    description: 'Path to generated plugin zip file, if "plugin-zip" was set.'
     value: ${{ steps.deploy-zip.outputs.plugin-zip }}
   plugin-version:
-    description: 'The version tag used to commit to WordPress.'
+    description: 'The version tag used to commit to "plugin-repository".'
     value: ${{ steps.deploy.outputs.plugin-version }}
   commit-message:
-    description: 'The message used to commit to WordPress.'
+    description: 'The message used to commit to "plugin-repository".'
     value: ${{ steps.deploy.outputs.commit-message }}
 runs:
   using: 'composite'
