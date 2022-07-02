@@ -5,6 +5,11 @@ if [ -z $GITHUB_WORKSPACE ]; then
     export GITHUB_WORKSPACE
 fi
 
+if [ -z $GITHUB_REPOSITORY ]; then
+    GITHUB_REPOSITORY=$(basename "$PWD")
+    export GITHUB_REPOSITORY
+fi
+
 DIRECTORY_SRC="$GITHUB_WORKSPACE/src"
 DIRECTORY_TESTS="$GITHUB_WORKSPACE/tests"
 

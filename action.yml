@@ -12,8 +12,8 @@ inputs:
     description: 'The repository password.'
     required: true
   plugin-repository:
-    description: 'The svn repository name (slug) of the plugin on WordPress.org. Can be a full url to use a custom repository. Defaults to git repository name.'
-    default: ${{ env.GITHUB_REPOSITORY }}
+    description: 'The svn repository name (slug) of the plugin on WordPress.org. Can be a full url to use a custom repository. Defaults to git repository name if empty. Default empty.'
+    default: ""
     type: string
   plugin-zip:
     description: 'Zip file name to generate, any custom text to name differently, "slug" (default) to use plugin slug.'
@@ -33,8 +33,8 @@ inputs:
     default: 'git'
     type: string
   working-directory:
-    description: 'Working directory, defaults to $GITHUB_WORKSPACE. All files in working directory will be committed, except "plugin-assets" directory.'
-    default: ${{ env.GITHUB_WORKSPACE }}
+    description: 'Working directory, defaults to $GITHUB_WORKSPACE if empty. All files in working directory will be committed, except "plugin-assets" directory. Default empty.'
+    default: ""
     type: string
   assets-directory:
     description: 'Directory containing plugin assets, defaults to ".wordpress-org", set empty to disable.'
@@ -44,15 +44,12 @@ outputs:
   plugin-zip:
     description: 'Path to plugin zip file.'
     value: ${{ steps.deploy-zip.outputs.plugin-zip }}
-    type: string
   plugin-version:
     description: 'The version tag used to commit to WordPress.'
     value: ${{ steps.deploy.outputs.plugin-version }}
-    type: string
   commit-message:
     description: 'The message used to commit to WordPress.'
     value: ${{ steps.deploy.outputs.commit-message }}
-    type: string
 runs:
   using: 'composite'
   steps:
@@ -60,6 +57,7 @@ runs:
       run: |
         apt update
         apt install -y subversion rsync zip
+      shell: bash
     - id: deploy
       env:
         INPUT_SVN_USERNAME: ${{ inputs.svn-username }}

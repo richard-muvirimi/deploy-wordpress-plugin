@@ -8,6 +8,9 @@ pluginRepository(){
         http*)
             #Use as is
             ;;
+        "")
+            INPUT_PLUGIN_REPOSITORY="https://plugins.svn.wordpress.org/$GITHUB_REPOSITORY"
+            ;;
         *)
             #Prepend WordPress
             INPUT_PLUGIN_REPOSITORY="https://plugins.svn.wordpress.org/$INPUT_PLUGIN_REPOSITORY"

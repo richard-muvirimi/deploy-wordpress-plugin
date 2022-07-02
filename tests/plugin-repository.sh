@@ -3,6 +3,17 @@
 . "$DIRECTORY_SRC/plugin-repository.sh" 
 
 #test plugin slug
+testEmptyRepositorySlug(){
+
+    INPUT_PLUGIN_REPOSITORY=$(pluginRepository "")
+
+    PLUGIN_SLUG=$(basename "$PWD")
+
+    assertEquals "https://plugins.svn.wordpress.org/$PLUGIN_SLUG" "$INPUT_PLUGIN_REPOSITORY"
+
+}
+
+#test plugin slug
 testRepositorySlug(){
 
     INPUT_PLUGIN_REPOSITORY=$(pluginRepository "test-slug")

@@ -3,6 +3,14 @@
 . "$DIRECTORY_SRC/working-directory.sh" 
 
 #Test working directory name
+testEmptyWorkingDirectoryName(){
+
+    INPUT_WORKING_DIRECTORY=$(workingDirectory "")
+
+    assertEquals "$GITHUB_WORKSPACE/" "$INPUT_WORKING_DIRECTORY" 
+}
+
+#Test working directory name
 testWorkingDirectoryName(){
 
     INPUT_WORKING_DIRECTORY=$(workingDirectory "test-directory")
