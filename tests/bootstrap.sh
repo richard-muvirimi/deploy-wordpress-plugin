@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+#https://stackoverflow.com/a/37300000/5956589
+set -e
+set -o pipefail
+
 if [ -z "$GITHUB_WORKSPACE" ]; then
     GITHUB_WORKSPACE="$PWD"
     export GITHUB_WORKSPACE
