@@ -55,8 +55,8 @@ runs:
   steps:
     - id: setup
       run: |
-        apt update
-        apt install -y subversion rsync zip
+        sudo apt update
+        sudo apt install -y subversion rsync zip
       shell: bash
     - id: deploy
       env:
