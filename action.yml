@@ -1,4 +1,4 @@
-name: 'Deploy WordPress Plugin'
+name: 'WordPress Plugin Deploy'
 description: 'Deploy WordPress Plugin to SVN repository'
 author: 'richard-muvirimi'
 branding:
