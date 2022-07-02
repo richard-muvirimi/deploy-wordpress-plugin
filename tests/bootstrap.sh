@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-if [ -z $GITHUB_WORKSPACE ]; then
+if [ -z "$GITHUB_WORKSPACE" ]; then
     GITHUB_WORKSPACE="$PWD"
     export GITHUB_WORKSPACE
 fi
 
-if [ -z $GITHUB_REPOSITORY ]; then
+if [ -z "$GITHUB_REPOSITORY" ]; then
     GITHUB_REPOSITORY=$(basename "$PWD")
     export GITHUB_REPOSITORY
 fi

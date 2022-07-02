@@ -94,7 +94,7 @@ svn status | grep ^\! | cut -c9- | sed 's/ /\\ /g'| xargs -L1 svn del --force
 
 #Fix directory out of date
 #https://stackoverflow.com/a/3298401/5956589
-svn update
+svn update "$SVN_DIRECTORY/"
 
 svn status
 

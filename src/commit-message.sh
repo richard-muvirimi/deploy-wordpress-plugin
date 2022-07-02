@@ -9,7 +9,7 @@ commitMessage(){
             INPUT_COMMIT_MESSAGE=$(git -C "$GITHUB_WORKSPACE" log -1 --format=%s)
             ;;
         *)
-            INPUT_COMMIT_MESSAGE=$(echo "$INPUT_COMMIT_MESSAGE" | sed s/":VERSION"/"$INPUT_PLUGIN_VERSION/")
+            INPUT_COMMIT_MESSAGE=$(sed s/":VERSION"/"$INPUT_PLUGIN_VERSION/" <<<"$INPUT_COMMIT_MESSAGE")
             ;;
     esac
 

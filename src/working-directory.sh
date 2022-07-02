@@ -30,5 +30,5 @@ assetsDirectory(){
 
     INPUT_ASSETS_DIRECTORY="$1"
 
-    echo "$(workingDirectory "$INPUT_ASSETS_DIRECTORY")"
+    workingDirectory "$INPUT_ASSETS_DIRECTORY"
 }
