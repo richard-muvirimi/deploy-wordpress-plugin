@@ -25,4 +25,4 @@ jobs:
           ignore_paths: deps
 
       - name: Run a test script
-        run: bash tests.sh
+        run: sh tests.sh

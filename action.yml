@@ -67,7 +67,7 @@ runs:
         INPUT_COMMIT_MESSAGE: ${{ inputs.commit-message }}
         INPUT_WORKING_DIRECTORY: ${{ inputs.working-directory }}
         INPUT_ASSETS_DIRECTORY: ${{ inputs.assets-directory }}
-      run: ${{ github.action_path }}/deploy.sh
+      run: sh ${{ github.action_path }}/deploy.sh
       shell: bash
     - id: deploy-zip
       if: ${{ env.INPUT_PLUGIN_ZIP != false }}
@@ -77,5 +77,5 @@ runs:
         INPUT_PLUGIN_REPOSITORY: ${{ inputs.plugin-repository }}
         INPUT_WORKING_DIRECTORY: ${{ inputs.working-directory }}
         INPUT_ASSETS_DIRECTORY: ${{ inputs.assets-directory }}
-      run: ${{ github.action_path }}/deploy-zip.sh
+      run: sh ${{ github.action_path }}/deploy-zip.sh
       shell: bash
