@@ -6,7 +6,7 @@ if [ -z "$GITHUB_WORKSPACE" ]; then
 fi
 
 if [ -z "$GITHUB_REPOSITORY" ]; then
-    GITHUB_REPOSITORY=$(basename "$PWD")
+    GITHUB_REPOSITORY="$(basename "$PWD")/$(basename "$PWD")"
     export GITHUB_REPOSITORY
 fi
 
