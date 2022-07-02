@@ -24,6 +24,8 @@ jobs:
         with:
           ignore_paths: deps
           check_together: 'yes'
+        env:
+          SHELLCHECK_OPTS: -e SC1091 -e SC2001
 
       - name: Run a test script
         run: sh tests.sh
