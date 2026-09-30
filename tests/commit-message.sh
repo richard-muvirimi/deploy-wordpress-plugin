@@ -24,3 +24,16 @@ testCustomCommitMessage(){
     assertEquals "Github deploy 1.0.0" "$INPUT_COMMIT_MESSAGE"
 
 }
+
+#test replacing every version placeholder
+testCommitMessageMultipleVersions(){
+
+    INPUT_PLUGIN_VERSION="1.0.0"
+
+    export INPUT_PLUGIN_VERSION
+
+    INPUT_COMMIT_MESSAGE=$(commitMessage "Release :VERSION (:VERSION)")
+
+    assertEquals "Release 1.0.0 (1.0.0)" "$INPUT_COMMIT_MESSAGE"
+
+}

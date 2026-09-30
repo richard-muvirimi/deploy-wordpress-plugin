@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-sh tests/bootstrap.sh
+bash tests/bootstrap.sh

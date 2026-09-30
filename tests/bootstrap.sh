@@ -18,10 +18,12 @@ DIRECTORY_TESTS="$GITHUB_WORKSPACE/tests"
 export DIRECTORY_SRC
 export DIRECTORY_TESTS
 
-"$GITHUB_WORKSPACE/deps/bin/shunit2" "$DIRECTORY_TESTS/working-directory.sh" 
-"$GITHUB_WORKSPACE/deps/bin/shunit2" "$DIRECTORY_TESTS/plugin-version.sh" 
-"$GITHUB_WORKSPACE/deps/bin/shunit2" "$DIRECTORY_TESTS/plugin-repository.sh" 
-"$GITHUB_WORKSPACE/deps/bin/shunit2" "$DIRECTORY_TESTS/commit-message.sh" 
-"$GITHUB_WORKSPACE/deps/bin/shunit2" "$DIRECTORY_TESTS/plugin-slug.sh" 
-"$GITHUB_WORKSPACE/deps/bin/shunit2" "$DIRECTORY_TESTS/plugin-zip.sh" 
+#run every test file except this one
+for TEST_FILE in "$DIRECTORY_TESTS"/*.sh; do
+    if [ "$TEST_FILE" = "$DIRECTORY_TESTS/bootstrap.sh" ]; then
+        continue
+    fi
+
+    bash "$GITHUB_WORKSPACE/deps/bin/shunit2" "$TEST_FILE"
+done
 

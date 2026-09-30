@@ -2,14 +2,20 @@
 
 . "$DIRECTORY_SRC/plugin-zip.sh" 
 
+#run before each test
+setUp(){
+
+    SVN_DIRECTORY="$GITHUB_WORKSPACE"
+
+    export SVN_DIRECTORY
+}
+
 #test slug zip name
 testSlugZipName(){
 
     PLUGIN_SLUG="test-slug"
-    SVN_DIRECTORY="$GITHUB_WORKSPACE"
 
     export PLUGIN_SLUG
-    export SVN_DIRECTORY
 
     INPUT_PLUGIN_ZIP=$(pluginZipName "slug")
 
@@ -21,10 +27,8 @@ testSlugZipName(){
 testCustomSlugZipName(){
 
     PLUGIN_SLUG="test-name"
-    SVN_DIRECTORY="$GITHUB_WORKSPACE"
 
     export PLUGIN_SLUG
-    export SVN_DIRECTORY
 
     INPUT_PLUGIN_ZIP=$(pluginZipName "$PLUGIN_SLUG")
 
@@ -36,10 +40,8 @@ testCustomSlugZipName(){
 testSlugZipFolder(){
     
     PLUGIN_SLUG="test-slug"
-    SVN_DIRECTORY="$GITHUB_WORKSPACE"
 
     export PLUGIN_SLUG
-    export SVN_DIRECTORY
 
     INPUT_PLUGIN_ZIP=$(pluginZipFolder "slug")
 
@@ -51,10 +53,8 @@ testSlugZipFolder(){
 testCustomZipFolder(){
         
     PLUGIN_SLUG="test-name"
-    SVN_DIRECTORY="$GITHUB_WORKSPACE"
 
     export PLUGIN_SLUG
-    export SVN_DIRECTORY
 
     INPUT_PLUGIN_ZIP_FOLDER=$(pluginZipFolder "$PLUGIN_SLUG")
 

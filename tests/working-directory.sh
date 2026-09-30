@@ -26,19 +26,10 @@ testWorkingDirectoryPath(){
     assertEquals "$GITHUB_WORKSPACE/test-directory/" "$INPUT_WORKING_DIRECTORY"
 }
 
-#Test assets directory name
-testAssetsDirectoryName(){
+#test missing nested working directory resolves to its path
+testMissingWorkingDirectoryPath(){
 
-    INPUT_ASSETS_DIRECTORY=$(assetsDirectory "test-directory")
+    INPUT_WORKING_DIRECTORY=$(workingDirectory "missing-parent/test-directory")
 
-    assertEquals "$GITHUB_WORKSPACE/test-directory/" "$INPUT_ASSETS_DIRECTORY" 
+    assertEquals "$GITHUB_WORKSPACE/missing-parent/test-directory/" "$INPUT_WORKING_DIRECTORY"
 }
-
-#test assets directory path
-testAssetsDirectoryPath(){
-
-    INPUT_ASSETS_DIRECTORY=$(assetsDirectory "$GITHUB_WORKSPACE/test-directory")
-
-    assertEquals "$GITHUB_WORKSPACE/test-directory/" "$INPUT_ASSETS_DIRECTORY"
-}
-

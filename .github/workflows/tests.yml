@@ -28,4 +28,4 @@ jobs:
           SHELLCHECK_OPTS: -e SC1091 -e SC2001
 
       - name: Run a test script
-        run: sh tests.sh
+        run: bash tests.sh

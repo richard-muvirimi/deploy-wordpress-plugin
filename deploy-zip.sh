@@ -3,6 +3,7 @@
 DIRECTORY_SRC="$GITHUB_ACTION_PATH/src"
 
 . "$DIRECTORY_SRC/working-directory.sh" 
+. "$DIRECTORY_SRC/assets-directory.sh" 
 . "$DIRECTORY_SRC/plugin-zip.sh" 
 . "$DIRECTORY_SRC/plugin-slug.sh" 
 
@@ -27,7 +28,7 @@ mkdir -p "$SVN_DIRECTORY"
 
 INPUT_PLUGIN_ZIP=$(pluginZipName "$INPUT_PLUGIN_ZIP")
 
-zip -r "$INPUT_PLUGIN_ZIP" "$INPUT_WORKING_DIRECTORY" --exclude "$INPUT_ASSETS_DIRECTORY"
+zip -r "$INPUT_PLUGIN_ZIP" "$INPUT_WORKING_DIRECTORY" ${INPUT_ASSETS_DIRECTORY:+--exclude "$INPUT_ASSETS_DIRECTORY"}
 echo "::set-output name=plugin-zip::$INPUT_PLUGIN_ZIP"
 
 echo "✓ Zip file generated!"

@@ -10,7 +10,7 @@ pluginSlug(){
                 #Use git repository name
                 INPUT_PLUGIN_REPOSITORY="$GITHUB_REPOSITORY"
             fi
-           
+        
             INPUT_PLUGIN_REPOSITORY=$(basename "$INPUT_PLUGIN_REPOSITORY")
             ;;
         *)

@@ -14,6 +14,7 @@ fi
 DIRECTORY_SRC="$GITHUB_ACTION_PATH/src"
 
 . "$DIRECTORY_SRC/working-directory.sh" 
+. "$DIRECTORY_SRC/assets-directory.sh" 
 . "$DIRECTORY_SRC/plugin-version.sh" 
 . "$DIRECTORY_SRC/plugin-repository.sh" 
 . "$DIRECTORY_SRC/commit-message.sh" 
@@ -26,10 +27,30 @@ export PLUGIN_SLUG
 
 #Normalize environment
 INPUT_PLUGIN_REPOSITORY=$(pluginRepository "$INPUT_PLUGIN_REPOSITORY")
-INPUT_PLUGIN_VERSION=$(pluginVersion "$INPUT_PLUGIN_VERSION")
-INPUT_COMMIT_MESSAGE=$(commitMessage "$INPUT_COMMIT_MESSAGE")
 INPUT_WORKING_DIRECTORY=$(workingDirectory "$INPUT_WORKING_DIRECTORY")
 INPUT_ASSETS_DIRECTORY=$(assetsDirectory "$INPUT_ASSETS_DIRECTORY")
+ASSETS_EXCLUDE=$(assetsExclude "$INPUT_WORKING_DIRECTORY" "$INPUT_ASSETS_DIRECTORY")
+
+#version is read from the working directory readme
+export INPUT_WORKING_DIRECTORY
+
+INPUT_PLUGIN_VERSION=$(pluginVersion "$INPUT_PLUGIN_VERSION")
+
+#commit message substitutes the version
+export INPUT_PLUGIN_VERSION
+
+INPUT_COMMIT_MESSAGE=$(commitMessage "$INPUT_COMMIT_MESSAGE")
+
+#Validate environment
+if [ ! -d "$INPUT_WORKING_DIRECTORY" ]; then
+	echo "Working directory $INPUT_WORKING_DIRECTORY not found"
+	exit 1
+fi
+
+if [ -z "$INPUT_PLUGIN_VERSION" ]; then
+	echo "Could not determine plugin version, set plugin-version or a Stable tag in readme.txt"
+	exit 1
+fi
 
 #svn working directory
 SVN_DIRECTORY=$(mktemp -d -p "$GITHUB_WORKSPACE")
@@ -49,7 +70,7 @@ svn update --set-depth infinity assets
 svn update --set-depth infinity trunk
 
 echo "ℹ︎ Copying files from $INPUT_WORKING_DIRECTORY to trunk/"
-rsync -rc "$INPUT_WORKING_DIRECTORY/" trunk/ --exclude "$INPUT_ASSETS_DIRECTORY" --delete --delete-excluded
+rsync -rc "$INPUT_WORKING_DIRECTORY/" trunk/ ${ASSETS_EXCLUDE:+--exclude "$ASSETS_EXCLUDE"} --delete --delete-excluded
 
 #copy files from trunk to tag directory
 svn update --set-depth infinity tags
@@ -61,26 +82,31 @@ rsync -rc trunk/ "tags/$INPUT_PLUGIN_VERSION/" --delete --delete-excluded
 
 #Handle assets
 if [ -z "$INPUT_ASSETS_DIRECTORY" ]; then
+    echo "ℹ︎ Assets directory not set, skipping assets"
+elif [ ! -d "$INPUT_ASSETS_DIRECTORY" ]; then
+    echo "ℹ︎ Assets directory $INPUT_ASSETS_DIRECTORY not found, skipping assets"
+else
     #copy files from assets directory
     echo "ℹ︎ Copying assets from $INPUT_ASSETS_DIRECTORY to assets/"
-    rsync -rc "$INPUT_ASSETS_DIRECTORY/" assets/ --exclude "$INPUT_WORKING_DIRECTORY" --delete --delete-excluded
+    mkdir -p assets/
+    rsync -rc "$INPUT_ASSETS_DIRECTORY" assets/ --delete
 
     echo "➤ Preparing asset files..."
     svn add --force "$SVN_DIRECTORY/assets/" > /dev/null
 
     # Fix asset mime type
     # https://developer.wordpress.org/plugins/wordpress-org/plugin-assets/#issues
-    if [[ -n $(find "assets" -maxdepth 1 -name "*.png" -print -quit) ]]; then
-        svn propset svn:mime-type "image/png" "assets/*.png" || true
+    if [ -n "$(find "assets" -maxdepth 1 -name "*.png" -print -quit)" ]; then
+        svn propset svn:mime-type "image/png" assets/*.png || true
     fi
-    if [[ -n $(find "assets" -maxdepth 1 -name "*.jpg" -print -quit) ]]; then
-        svn propset svn:mime-type "image/jpeg" "assets/*.jpg" || true
+    if [ -n "$(find "assets" -maxdepth 1 -name "*.jpg" -print -quit)" ]; then
+        svn propset svn:mime-type "image/jpeg" assets/*.jpg || true
     fi
-    if [[ -n $(find "assets" -maxdepth 1 -name "*.gif" -print -quit) ]]; then
-        svn propset svn:mime-type "image/gif" "assets/*.gif" || true
+    if [ -n "$(find "assets" -maxdepth 1 -name "*.gif" -print -quit)" ]; then
+        svn propset svn:mime-type "image/gif" assets/*.gif || true
     fi
-    if [[ -n $(find "assets" -maxdepth 1 -name "*.svg" -print -quit) ]]; then
-        svn propset svn:mime-type "image/svg+xml" "assets/*.svg" || true
+    if [ -n "$(find "assets" -maxdepth 1 -name "*.svg" -print -quit)" ]; then
+        svn propset svn:mime-type "image/svg+xml" assets/*.svg || true
     fi
 fi
 

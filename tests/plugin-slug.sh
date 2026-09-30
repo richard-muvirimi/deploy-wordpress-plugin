@@ -32,3 +32,12 @@ testPluginSlugURL(){
     assertEquals "test-slug" "$PLUGIN_SLUG"
 
 }
+
+#test plugin slug from url with trailing slash
+testPluginSlugURLTrailingSlash(){
+
+    PLUGIN_SLUG=$(pluginSlug "https://plugins.svn.wordpress.org/test-slug/")
+
+    assertEquals "test-slug" "$PLUGIN_SLUG"
+
+}
