@@ -129,8 +129,8 @@ svn commit -m "$INPUT_COMMIT_MESSAGE" --no-auth-cache --non-interactive  --usern
 
 echo "✓ Plugin deployed!"
 
-echo "::set-output name=plugin-version::$INPUT_PLUGIN_VERSION"
-echo "::set-output name=commit-message::$INPUT_COMMIT_MESSAGE"
+echo "plugin-version=$INPUT_PLUGIN_VERSION" >> "$GITHUB_OUTPUT"
+echo "commit-message=$INPUT_COMMIT_MESSAGE" >> "$GITHUB_OUTPUT"
 
 echo "➤ Cleaning up working directory"
 rm -rf "$SVN_DIRECTORY"

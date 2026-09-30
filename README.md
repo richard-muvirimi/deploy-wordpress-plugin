@@ -4,50 +4,108 @@ Deploy WordPress Plugin to SVN repository
 
 This action commits files to your SVN repository (totally unopinionated about how or when you do it). 
 
+### Requirements
+
+- An Ubuntu / Debian runner, e.g. `ubuntu-latest`. `subversion`, `rsync` and `zip` are installed with `apt`.
+
+### Repository layout
+
+The action deploys two folders, and nothing else:
+
+```text
+your-repository/
+├── .wordpress-org/          ← assets-directory → SVN assets/
+│   ├── banner-772x250.png
+│   ├── banner-1544x500.png
+│   ├── icon-128x128.png
+│   ├── icon-256x256.png
+│   └── screenshot-1.png
+├── build/                   ← working-directory → SVN trunk/, tags/<version>/ and the zip
+│   ├── my-plugin.php
+│   ├── readme.txt
+│   └── includes/
+├── src/                     ┐
+├── node_modules/            │ everything outside the two folders
+├── tests/                   │ is never deployed
+└── .git/                    ┘
+```
+
+- **Working directory**: everything in it is committed exactly as is, nothing is filtered out. Fill it with only the files that ship, e.g. in a build step before this action, and point `working-directory` at it. Left empty it defaults to the whole repository, including `.git/`, so set it unless your repository only contains the plugin.
+- **`readme.txt`** belongs at the root of the working directory, its `Stable tag` is the default version.
+- **Assets directory**: banners, icons and screenshots for the WordPress.org plugin page, see [plugin assets](https://developer.wordpress.org/plugins/wordpress-org/plugin-assets/) for file names and sizes. Keep it outside the working directory, if it is inside it is left out of `trunk/` and the zip automatically.
+
 ### Usage Example
 ```yml
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v4
+    - name: Build
+      run: |
+        mkdir build
+        cp -r my-plugin.php readme.txt includes build/
     - name: WordPress Plugin Deploy
       id: deploy
-      uses: richard-muvirimi/deploy-wordpress-plugin@development
+      uses: richard-muvirimi/deploy-wordpress-plugin@1.1.1
       with:
         svn-username: ${{ secrets.SVN_USERNAME }}
         svn-password: ${{ secrets.SVN_PASSWORD }}
+        working-directory: build
 ```
 
-Optionally a zip file of the commited files can be generated and path provided incase you want to run further actions, for example 
-#### Create a tag
+#### Upload the plugin zip to a GitHub release
+
+A zip of the working directory is also generated, laid out as WordPress expects: a single `<plugin-slug>/` folder at the root, so it can be installed from Plugins → Add New → Upload. Its path is available as the `plugin-zip` output, for example to attach it to the release that triggered the deploy.
+
 ```yml
- 
- - name: Upload release asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build
+      run: |
+        mkdir build
+        cp -r my-plugin.php readme.txt includes build/
+    - name: WordPress Plugin Deploy
+      id: deploy
+      uses: richard-muvirimi/deploy-wordpress-plugin@1.1.1
       with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ${{ steps.deploy.outputs.plugin-zip }}
-        asset_name: ${{ github.event.repository.name }}.zip
-        asset_content_type: application/zip
+        svn-username: ${{ secrets.SVN_USERNAME }}
+        svn-password: ${{ secrets.SVN_PASSWORD }}
+        working-directory: build
+        plugin-version: tag
+    - name: Upload release asset
+      env:
+        GH_TOKEN: ${{ github.token }}
+        TAG: ${{ github.event.release.tag_name }}
+        PLUGIN_ZIP: ${{ steps.deploy.outputs.plugin-zip }}
+      run: gh release upload "$TAG" "$PLUGIN_ZIP"
 ```
 
-### Tag generation
+### SVN tag generation
 
-Tags are created/updated on each run using provided `plugin-version` for the tag to target.
+On each run the working directory is copied to `trunk/` and to `tags/<plugin-version>/`. An existing SVN tag with the same version is overwritten.
+
+The deploy stops before anything is committed if the working directory does not exist or no version can be determined, e.g. `readme.txt` has no `Stable tag`, or `plugin-version: tag` runs on a branch push.
 
 ### Suggested workflows
 
-1. On tag creation. Version will be picked from latest tag.
+1. On tag creation, with `plugin-version: tag` so the version is the pushed tag.
 ```yml
 on:
   push:
     tags:
     - "*"
 ```
-2. Having a production only branch where you merge to when ready. Version being picked from `readme.txt`.
+2. Having a production only branch where you merge to when ready. Version being picked from the `Stable tag` in `readme.txt` (default).
 3. Any other [events that trigger workflows](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows)
 
 ### Action Inputs
@@ -91,7 +149,7 @@ required
 <code>plugin-repository</code>
 </td>
 <td>
-The svn repository name (slug) of the plugin on WordPress.org. Can be a full url to use a custom repository. Defaults to git repository name if empty. Default empty.
+The svn repository name (slug) of the plugin on WordPress.org. Can be a full url to use a custom repository. Defaults to git repository name if empty.
 </td>
 <td>
 <code>''</code>
@@ -103,7 +161,7 @@ The svn repository name (slug) of the plugin on WordPress.org. Can be a full url
 <code>plugin-zip</code>
 </td>
 <td>
-Zip file name to generate, any custom text to name differently, "slug" (default) to use plugin slug, set empty to disable. <code>.zip</code> will be automatically appended.
+Zip file name to generate, <code>slug</code> (default) to use the plugin slug, any other text to name it differently, empty to disable. <code>.zip</code> is appended automatically.
 </td>
 <td>
 <code>'slug'</code>
@@ -115,7 +173,7 @@ Zip file name to generate, any custom text to name differently, "slug" (default)
 <code>plugin-zip-folder</code>
 </td>
 <td>
-Folder name to use at root of zip, "slug" to use plugin slug, set empty to disable.
+Folder name to use at root of zip, <code>slug</code> (default) to use the plugin slug as WordPress expects, any other text to name it differently, empty for no folder.
 </td>
 <td>
 <code>'slug'</code>
@@ -127,7 +185,7 @@ Folder name to use at root of zip, "slug" to use plugin slug, set empty to disab
 <code>plugin-version</code>
 </td>
 <td>
-Tag for releasing to WordPress, any custom text to use a custom tag, "tag" to read from release tags, "readme" (default) to obtain from readme.txt.
+Tag for releasing to WordPress. <code>readme</code> (default) reads the <code>Stable tag</code> from <code>readme.txt</code> in the working directory root, <code>tag</code> uses the pushed git tag (fails on non tag pushes), any other text is used as is. The deploy fails if no version can be determined.
 </td>
 <td>
 <code>'readme'</code>
@@ -139,7 +197,7 @@ Tag for releasing to WordPress, any custom text to use a custom tag, "tag" to re
 <code>commit-message</code>
 </td>
 <td>
-Commit message for releasing to WordPress, any custom text to use a custom message, "git" (default) to use the last git commit message. Substitutes <code>:VERSION</code> with provided/inferred plugin version.
+Commit message for releasing to WordPress, any custom text to use a custom message, <code>git</code> (default) to use the last git commit message. Substitutes every <code>:VERSION</code> with the provided/inferred plugin version.
 </td>
 <td>
 <code>'git'</code>
@@ -151,7 +209,7 @@ Commit message for releasing to WordPress, any custom text to use a custom messa
 <code>working-directory</code>
 </td>
 <td>
-Working directory, defaults to <code>$GITHUB_WORKSPACE</code> if empty. All files in working directory will be committed, except those in "assets-directory" directory. Default empty.
+Working directory, defaults to <code>$GITHUB_WORKSPACE</code> if empty. All files in working directory will be committed, except those in the <code>assets-directory</code> directory. The deploy fails if it does not exist.
 </td>
 <td>
 <code>''</code>
@@ -163,7 +221,7 @@ Working directory, defaults to <code>$GITHUB_WORKSPACE</code> if empty. All file
 <code>assets-directory</code>
 </td>
 <td>
-Directory containing plugin assets, defaults to <code>.wordpress-org</code>, set empty to disable.
+Directory containing plugin assets (banners, icons, screenshots), committed to the SVN <code>assets/</code> folder. Set empty to disable, skipped if it does not exist.
 </td>
 <td>
 <code>'.wordpress-org'</code>
