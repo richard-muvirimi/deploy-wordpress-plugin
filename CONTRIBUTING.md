@@ -10,3 +10,13 @@ That said, contributing is not just writing code. It entails
   - New feature suggestions are also managed through [issues](issues).
 3. Pull Requests
   - Just make sure all tests pass, and you have included tests for your additions.
+
+## Running tests
+
+Tests use [shUnit2](https://github.com/kward/shunit2), which is downloaded into `deps/` on the first run.
+
+```sh
+bash tests.sh
+```
+
+Or with [bpkg](https://github.com/bpkg/bpkg): `bpkg run setup` installs the dependencies and `bpkg run test` runs the tests.
