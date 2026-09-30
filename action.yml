@@ -16,15 +16,15 @@ inputs:
     default: ""
     type: string
   plugin-zip:
-    description: 'Zip file name to generate, any custom text to name differently, "slug" (default) to use plugin slug. set empty to disable. ".zip" will be automatically appended.'
+    description: 'Zip file name to generate, "slug" (default) to use the plugin slug, any other text to name it differently, empty to disable. ".zip" is appended automatically.'
     default: 'slug'
     type: string
   plugin-zip-folder:
-    description: 'Folder name to use at root of zip, "slug" to use plugin slug, set empty to disable.'
-    default: ''
+    description: 'Folder name to use at root of zip, "slug" (default) to use the plugin slug as WordPress expects, any other text to name it differently, empty for no folder.'
+    default: 'slug'
     type: string
   plugin-version:
-    description: 'Tag for releasing to WordPress, any custom text to use a custom tag, "tag" to read from release tags, "readme" (default) to obtain from readme.txt.'
+    description: 'Tag for releasing to WordPress, "readme" (default) to read the Stable tag from readme.txt in the working directory root, "tag" to use the pushed git tag (fails on non tag pushes), any other text to use as is. The deploy fails if no version can be determined.'
     default: 'readme'
     type: string
     required: true
@@ -33,11 +33,11 @@ inputs:
     default: 'git'
     type: string
   working-directory:
-    description: 'Working directory, defaults to $GITHUB_WORKSPACE if empty. All files in working directory will be committed, except those in "assets-directory" directory. Default empty.'
+    description: 'Working directory, defaults to $GITHUB_WORKSPACE if empty. All files in working directory will be committed, except those in "assets-directory" directory. The deploy fails if it does not exist. Default empty.'
     default: ""
     type: string
   assets-directory:
-    description: 'Directory containing plugin assets, defaults to ".wordpress-org", set empty to disable.'
+    description: 'Directory containing plugin assets, defaults to ".wordpress-org", set empty to disable. Skipped if it does not exist.'
     default: '.wordpress-org'
     type: string
 outputs:
@@ -70,7 +70,7 @@ runs:
       run: bash ${{ github.action_path }}/deploy.sh
       shell: bash
     - id: deploy-zip
-      if: ${{ env.INPUT_PLUGIN_ZIP != false }}
+      if: ${{ inputs.plugin-zip != '' }}
       env:
         INPUT_PLUGIN_ZIP: ${{ inputs.plugin-zip }}
         INPUT_PLUGIN_ZIP_FOLDER: ${{ inputs.plugin-zip-folder }}

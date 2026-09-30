@@ -1,41 +1,36 @@
 #!/usr/bin/env bash
 
-#the zip name to generate
+#the zip file name to generate
 pluginZipName(){
 
     INPUT_PLUGIN_ZIP="$1"
 
     case "$INPUT_PLUGIN_ZIP" in
         slug | "")
-            INPUT_PLUGIN_ZIP=$(readlink -fq "$SVN_DIRECTORY/$PLUGIN_SLUG")
+            INPUT_PLUGIN_ZIP="$PLUGIN_SLUG"
             ;;
         *)
-            #Use provided
-            INPUT_PLUGIN_ZIP=$(readlink -fq "$SVN_DIRECTORY/$INPUT_PLUGIN_ZIP")
+            #Use provided, without a duplicate extension
+            INPUT_PLUGIN_ZIP="${INPUT_PLUGIN_ZIP%.zip}"
             ;;
     esac
 
     echo "$INPUT_PLUGIN_ZIP.zip"
-
 }
 
-#the zip folder to embed inside
+#the folder to embed at the root of the zip, empty for none
 pluginZipFolder(){
 
     INPUT_PLUGIN_ZIP_FOLDER="$1"
 
     case "$INPUT_PLUGIN_ZIP_FOLDER" in
         slug)
-            SVN_DIRECTORY=$(readlink -fq "$SVN_DIRECTORY/$PLUGIN_SLUG")
-            ;;
-        false)
-            #leave as is
+            INPUT_PLUGIN_ZIP_FOLDER="$PLUGIN_SLUG"
             ;;
         *)
             #Use provided
-            SVN_DIRECTORY=$(readlink -fq "$SVN_DIRECTORY/$INPUT_PLUGIN_ZIP_FOLDER")
             ;;
     esac
 
-    echo "$SVN_DIRECTORY"
+    echo "$INPUT_PLUGIN_ZIP_FOLDER"
 }
