@@ -40,7 +40,10 @@ generateZip(){
 
     OUTPUT_FILE="$SAMPLE_WORKSPACE.output"
 
-    GITHUB_ACTION_PATH="$GITHUB_WORKSPACE" \
+    #this repository is the action, the sample repository is the workspace
+    DIRECTORY_ACTION="$GITHUB_WORKSPACE"
+
+    GITHUB_ACTION_PATH="$DIRECTORY_ACTION" \
     GITHUB_WORKSPACE="$SAMPLE_WORKSPACE" \
     GITHUB_REPOSITORY="me/test-slug" \
     GITHUB_OUTPUT="$OUTPUT_FILE" \
@@ -50,7 +53,7 @@ generateZip(){
     INPUT_PLUGIN_ZIP_FOLDER="$2" \
     INPUT_WORKING_DIRECTORY="$3" \
     INPUT_ASSETS_DIRECTORY=".wordpress-org" \
-        bash "$GITHUB_WORKSPACE/deploy-zip.sh" > /dev/null
+        bash "$DIRECTORY_ACTION/deploy-zip.sh" > /dev/null
 
     sed -n 's/^plugin-zip=//p' "$OUTPUT_FILE"
 }
